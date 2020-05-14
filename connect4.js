@@ -16,12 +16,10 @@ const board = []; // array of rows, each row is array of cells  (board[y][x])
  */
 
 function makeBoard() {
-  // TODO: set "board" to empty HEIGHT x WIDTH matrix array
-  // const board = [];
   for (let y = 0; y < HEIGHT; y++) {
     board.push([]);
     for (let x = 0; x < WIDTH; x++) {
-        board[y].push(null);
+      board[y].push(null);
     }
   }
 }
@@ -29,10 +27,8 @@ function makeBoard() {
 /** makeHtmlBoard: make HTML table and row of column tops. */
 
 function makeHtmlBoard() {
-  // TODO: get "htmlBoard" variable from the item in HTML w/ID of "board"
   const htmlBoard = document.getElementById("board");
 
-  // TODO: add comment for this code
   // this block of code is making the clickable row for the players to interact with
   const top = document.createElement("tr");
   top.setAttribute("id", "column-top");
@@ -45,7 +41,6 @@ function makeHtmlBoard() {
   }
   htmlBoard.append(top);
 
-  // TODO: add comment for this code
   // for each iteration of the outer loop we are creating a row in the html table
   // each pass through of the inner loop adds a cell to the current row and sets the id for each element
   // to give each element a unique coordinate
@@ -64,20 +59,27 @@ function makeHtmlBoard() {
 /** findSpotForCol: given column x, return top empty y (null if filled) */
 
 function findSpotForCol(x) {
-  // TODO: write the real version of this, rather than always returning 0
-  return 0;
+  for (let y = HEIGHT - 1; y > -1; y--) {
+    if (board[y][x] === null) return y;
+  }
+  return null;
 }
 
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 function placeInTable(y, x) {
-  // TODO: make a div and insert into correct table cell
+  const coin = document.createElement('div');
+  const cellLocation = document.getElementById(`${y}-${x}`);
+  // give coin a color based on current player. 
+  coin.classList.add('piece',`p${currPlayer}`);
+
+  cellLocation.appendChild(coin);
 }
 
 /** endGame: announce game end */
 
 function endGame(msg) {
-  // TODO: pop up alert message
+  alert(msg);
 }
 
 /** handleClick: handle click of column top to play piece */
@@ -93,8 +95,8 @@ function handleClick(evt) {
   }
 
   // place piece in board and add to HTML table
-  // TODO: add line to update in-memory board
   placeInTable(y, x);
+  board[y][x] = currPlayer;
 
   // check for win
   if (checkForWin()) {
@@ -102,10 +104,13 @@ function handleClick(evt) {
   }
 
   // check for tie
-  // TODO: check if all cells in board are filled; if so call, call endGame
+  let tie = checkForTie(board);
+  if (tie) {
+    return endGame(`Tie!`);
+  }
 
   // switch players
-  // TODO: switch currPlayer 1 <-> 2
+  currPlayer = (currPlayer === 1) ? 2 : 1;
 }
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
@@ -127,7 +132,8 @@ function checkForWin() {
   }
 
   // TODO: read and understand this code. Add comments to help you.
-
+  // Checks each column and row for horizontal, vertical, diagonal (right-side), diagonal (left-side) win conditions. 
+  // If at least one of these win conditions return true under the _win() function, it will return true.
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
       let horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
@@ -140,6 +146,16 @@ function checkForWin() {
       }
     }
   }
+}
+
+/* Checks for tie */
+function checkForTie(board) {
+  for (let column of board) {
+    for (let row of column) {
+      if (row === null) return false;
+    }
+  }
+  return true;
 }
 
 makeBoard();
