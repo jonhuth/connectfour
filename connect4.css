@@ -9,11 +9,28 @@
 /* pieces are div within game table cells: draw as colored circles */
 
 .piece {
+  /* animation: 3s ease-in 1s infinite reverse both running slidein; */
+  animation-duration: 1s;
+  animation-name: slide;
   /* TODO: make into circles */
   border-radius: 100%;
   margin: 5px;
   width: 80%;
   height: 80%;
+}
+
+@keyframes slide {
+  from {
+    margin-top: -600%;
+    height: 80%;
+    width: 80%;
+  }
+
+  to {
+    margin-top: 0%;
+    height: 80%;
+    width: 80%;
+  }
 }
 
 
